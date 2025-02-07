@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath(group: 'software.amazon.awssdk', name: 'bom', version: '2.20.43')
+        classpath(group: 'software.amazon.awssdk', name: 'sso', version: '2.20.43')
+        classpath(group: 'software.amazon.awssdk', name: 'auth', version: '2.20.43')
+    }
+}
+
+plugins {
+    id 'groovy'
+    id 'java'
+    id 'idea'
+    id 'com.avast.gradle.docker-compose' version '0.16.11'
+    id 'com.dorongold.task-tree' version '2.1.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+
+import software.amazon.awssdk.auth.credentials.*;
+
+ProfileCredentialsProvider credentialsProvider = ProfileCredentialsProvider.create("emea_ee_dev_pepperandsalt_imipl-119245722327")
+AwsCredentials awsCredentials = credentialsProvider.resolveCredentials()
+
+repositories {
+    flatDir{
+        dirs "${rootProject.projectDir}/customlib"
+    }
+    maven {
+        url "s3://aws-maven-repo.itdesign.de/releases"
+        credentials(org.gradle.api.credentials.AwsCredentials) {
+            accessKey awsCredentials.accessKeyId()
+            secretKey awsCredentials.secretAccessKey()
+            sessionToken awsCredentials.sessionToken()
+        }
+    }
+    mavenCentral {
+        content {
+            excludeGroupByRegex "de\\.itdesign.*"
+            excludeGroupByRegex "de\\.itd.*"
+            excludeGroupByRegex "clarity.*"
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy-all:4.0.9'
+    //implementation 'org.apache.groovy:groovy-yaml:4.0.9'
+    //implementation "clarity:clarity-all:$gradle.ext.clarityBuildVersion"
+    implementation ':itd-interface-1.7.2'
+    implementation ':itd-groovy-common-g4-1.7.1'
+
+
+}
+

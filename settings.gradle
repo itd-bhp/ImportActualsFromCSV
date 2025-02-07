@@ -1,0 +1,3 @@
+rootProject.name = 'ImportingActuals'
+
+gradle.ext.clarityBuildVersion = '16.1.3'
