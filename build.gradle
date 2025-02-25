@@ -50,9 +50,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.groovy:groovy-all:4.0.9'
-    //implementation 'org.apache.groovy:groovy-yaml:4.0.9'
-    //implementation "clarity:clarity-all:$gradle.ext.clarityBuildVersion"
+    implementation 'org.apache.groovy:groovy-all:4.0.14'
+    implementation 'org.apache.groovy:groovy-yaml:4.0.14'
+    implementation "clarity:clarity-all:$gradle.ext.clarityBuildVersion"
     implementation ':itd-interface-1.7.2'
     implementation ':itd-groovy-common-g4-1.7.1'
 
