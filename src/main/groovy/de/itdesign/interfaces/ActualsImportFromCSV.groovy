@@ -28,6 +28,7 @@ import java.sql.Connection
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
+
 class ActualsImportFromCSV {
     Sql sql
     Object log
@@ -44,7 +45,7 @@ class ActualsImportFromCSV {
     }
 
     InterfaceProcessor validateAndTransform() {
-        log?.info"validation in class"
+        log?.info "validation in class"
         RowValidation rowValidation = initRowValidation()
         StagingValidation stagingValidation = new StagingValidation(actualsInterfaceProcessor.ctx, log, true)
         RestResponse validationRestResponse = stagingValidation.validate(rowValidation, InterfaceStatusEnum.NEW, InterfaceStatusEnum.VALIDATED, InterfaceStatusEnum.FAILED, InterfaceStatusEnum.WARNING, InterfaceStatusEnum.VALIDATED)
@@ -55,19 +56,15 @@ class ActualsImportFromCSV {
     }
 
     void writeToTarget() {
-        log.info "inside write to target"
         actualsInterfaceProcessor.actualsDatabaseUtils.deletePendingTransactions()
-        log.info "ins11111111rget"
         processActuals()
         if (actualsInterfaceProcessor.ctx.configInstance.postTransactions) {
             actualsInterfaceProcessor.createStagingRecordsForRemainingCost()
             processActuals()
         }
-        log.info "ins11111111rget"
     }
 
     void processActuals() {
-        log.info "2222222222222"
         processActuals(InterfaceStatusEnum.VALIDATED)
         processActuals(InterfaceStatusEnum.WARNING)
 
@@ -80,7 +77,6 @@ class ActualsImportFromCSV {
     }
 
     def processActuals(InterfaceStatusEnum status) {
-        log.info "4444444444"
         processActualsWithZeroUnits(status)
         processActualsWithNonZeroUnits(status)
     }
@@ -200,8 +196,6 @@ class ActualsImportFromCSV {
                                 , []
                                 , OutputFormatter.&asIs
                         ),
-//
-
                         new FieldValidation(
                                 ["z_res_code_raw"]
                                 , "z_res_code_cl"
@@ -249,7 +243,6 @@ class ActualsImportFromCSV {
     }
 
 
-
     String prepareExternalId(Object... inputs) {
         if (inputs.every()) {
             String invCode = inputs[0] as String
@@ -279,7 +272,7 @@ class ActualsImportFromCSV {
 
     Long getTaskId(SecurityIdentifier securityIdentifier, LookupService lookupService, String dynamicLookupType, Map<String, Object> defaultSearchCriteria, List<String> searchField, Object... inputs) {
         String invCode = inputs ? inputs[0] as String : null
-        String tskcode = inputs ? inputs[1] as String :null
+        String tskcode = inputs ? inputs[1] as String : null
 
         log?.info "inv code ${invCode}"
         log?.info "task code ${tskcode}"
